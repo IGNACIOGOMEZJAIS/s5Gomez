@@ -25,3 +25,5 @@ Eliminar tareas (con confirmación previa)
 Marcar tareas como completadas o pendientes
 
 Ver el listado completo de tareas en una sola pantalla
+
+Link al proyecto: https://s5nodo.netlify.app/
