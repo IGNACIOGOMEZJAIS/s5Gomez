@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const TaskContext = createContext();
 
@@ -23,7 +24,17 @@ export const TaskProvider = ({ children }) => {
       setLoading(false);
     }
   };
-
+  const handleToggleStatus = async (id, currentStatus) => {
+    try {
+      await toggleTaskStatus(id, currentStatus);
+      toast.success(
+        `Tarea marcada como ${currentStatus ? 'pendiente' : 'completada'}`
+      );
+    } catch (error) {
+      toast.error('Error al cambiar el estado');
+      console.error(error);
+    }
+  };
   const createTask = async (taskData) => {
     try {
       const { data } = await axios.post(API, taskData);
@@ -47,12 +58,24 @@ export const TaskProvider = ({ children }) => {
   };
 
   const deleteTask = async (id) => {
-    try {
-      await axios.delete(`${API}/${id}`);
-      setTasks((prev) => prev.filter((task) => task.id !== id));
-    } catch (error) {
-      console.error("Error al eliminar la tarea", error);
-      throw error;
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción no se puede deshacer',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`${API}/${id}`); // <- Aquí está el cambio clave
+        setTasks((prev) => prev.filter((task) => task.id !== id)); // actualizamos el estado
+        toast.success('Tarea eliminada con éxito');
+      } catch (error) {
+        toast.error('Error al eliminar la tarea');
+        console.error(error);
+      }
     }
   };
 
@@ -69,6 +92,32 @@ export const TaskProvider = ({ children }) => {
     }
   };
 
+  const onSubmit = async (data) => {
+    try {
+         await createTask(data);
+         reset();
+         Swal.fire({
+           icon: "success",
+           title: "Tarea creada con éxito",
+           text: "¿Qué querés hacer ahora?",
+           showCancelButton: true,
+           confirmButtonText: "Ir a mi lista de tareas",
+           cancelButtonText: "Seguir creando tareas",
+         }).then((result) => {
+           if (result.isConfirmed) {
+             navigate("/");
+           }
+         });
+       }catch (error) {
+       Swal.fire({
+         icon: "error",
+         title: "Error",
+         text: "Error al guardar la tarea",
+       });
+       console.error(error);
+     }
+   };
+
   const handleEdit = (task) => {
     setEditingTask(task);
   };
@@ -83,6 +132,7 @@ export const TaskProvider = ({ children }) => {
         tasks,
         loading,
         fetchTasks,
+        onSubmit,
         createTask,
         updateTask,
         deleteTask,
@@ -90,6 +140,7 @@ export const TaskProvider = ({ children }) => {
         toggleTaskStatus,
         editingTask,
         setEditingTask,
+        handleToggleStatus
       }}
     >
       {children}

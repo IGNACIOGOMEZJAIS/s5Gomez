@@ -10,7 +10,7 @@ const AppRouter = () => {
     <>
       <Routes>
         <Route path='/home' element={<TaskManager />} />
-        <Route path='/list' element={<TaskList />} />
+        <Route path='/' element={<TaskList />} />
         {/* rutas dinámicas  */}
        
 

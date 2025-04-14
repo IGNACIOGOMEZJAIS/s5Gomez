@@ -1,6 +1,12 @@
 import React from "react";
+import { useTasks } from "./contexts/TaskContext";
 
-const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }) => {
+const TaskCard = ({ task}) => {
+  const {
+      deleteTask,
+      handleEdit,
+      handleToggleStatus,
+    } = useTasks();
   return (
     <div
       className={`p-4 border rounded-md ${
@@ -29,7 +35,7 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }) => {
 
         <div className="flex space-x-2">
           <button
-            onClick={() => onToggleStatus(task.id, task.completed)}
+            onClick={() => handleToggleStatus(task.id, task.completed)}
             className={`p-2 rounded-md ${
               task.completed
                 ? "bg-yellow-100 text-yellow-700"
@@ -67,7 +73,7 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }) => {
           </button>
 
           <button
-            onClick={() => onEdit(task)}
+            onClick={() => handleEdit(task)}
             className="p-2 bg-blue-100 text-blue-700 rounded-md"
             title="Editar"
           >
@@ -82,7 +88,7 @@ const TaskCard = ({ task, onEdit, onDelete, onToggleStatus }) => {
           </button>
 
           <button
-            onClick={() => onDelete(task.id)}
+            onClick={() => deleteTask(task.id)}
             className="p-2 bg-red-100 text-red-700 rounded-md"
             title="Eliminar"
           >

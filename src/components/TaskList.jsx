@@ -33,38 +33,8 @@ const TaskList = () => {
     }
   }, [editingTask, setValue]);
 
-  const handleDelete = async (id) => {
-    const result = await Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'Esta acción no se puede deshacer',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
-    });
+  
 
-    if (result.isConfirmed) {
-      try {
-        await deleteTask(id);
-        toast.success('Tarea eliminada con éxito');
-      } catch (error) {
-        toast.error('Error al eliminar la tarea');
-        console.error(error);
-      }
-    }
-  };
-
-  const handleToggleStatus = async (id, currentStatus) => {
-    try {
-      await toggleTaskStatus(id, currentStatus);
-      toast.success(
-        `Tarea marcada como ${currentStatus ? 'pendiente' : 'completada'}`
-      );
-    } catch (error) {
-      toast.error('Error al cambiar el estado');
-      console.error(error);
-    }
-  };
 
   return (
     <div className="p-6">
@@ -154,9 +124,6 @@ const TaskList = () => {
             <TaskCard
               key={task.id}
               task={task}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onToggleStatus={handleToggleStatus}
             />
           ))}
         </div>

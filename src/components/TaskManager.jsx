@@ -34,7 +34,7 @@ const TaskManager = () => {
           cancelButtonText: "Seguir creando tareas",
         }).then((result) => {
           if (result.isConfirmed) {
-            navigate("/list");
+            navigate("/");
           }
         });
       }catch (error) {

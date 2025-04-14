@@ -21,7 +21,7 @@ const Navbar = () => {
           </Link>
 
           <Link
-            to="/list"
+            to="/"
             className="flex items-center space-x-1 hover:text-green-400 transition"
           >
             <ListTodo className="w-5 h-5" />
